@@ -1,0 +1,5 @@
+java.lang:type=Threading	ThreadCount	PeakThreadCount
+java.lang:type=Memory	HeapMemoryUsage	NonHeapMemoryUsage
+java.lang:type=Memory	HeapMemoryUsage	NonHeapMemoryUsage
+java.lang:type=OperatingSystem	ProcessCpuLoad	SystemCpuLoad
+Q>org.apache.jackrabbit.oak:name="Consolidated Cache statistics",type="ConsolidatedCacheStats",id=*	CacheStats

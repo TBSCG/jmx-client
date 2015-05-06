@@ -1,0 +1,11 @@
+LINE_NAME=service
+ENV_NAME=preprod
+NODE=1
+IP=10.20.23.130
+JMX_USERNAME=admin
+JMX_PASSWORD=qwerty
+REFRESH_MBEAN_NAMES_EVERY=10    # number of iterations of SLEEP_TIME
+SLEEP_TIME=60
+LOG_ROTATE_TIME=14400
+JAVA=/usr/bin/java
+ROTATELOGS=/usr/sbin/rotatelogs

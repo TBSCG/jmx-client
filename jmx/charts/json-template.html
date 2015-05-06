@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script type="text/javascript" src="datafiles.json"></script>
+    <script type="text/javascript">
+      google.load('visualization', '1.0', {'packages':['corechart']});
+
+      $(function() {
+        $('#title').text(window.location.pathname.replace(new RegExp('^.*/([^/]+/[^/]+)/(index.html)?$'), '$1'));
+
+        // DATA_FILES declated in datafiles.json
+        var $datafiles = $('#datafiles');
+        for (var i = 0; i < DATA_FILES.length ; i++) {
+          $datafiles.append('<option value="' + DATA_FILES[i] +'">' + DATA_FILES[i].replace(/\.json$/, '') + '</option>');
+        }
+      });
+
+      function drawChart() {
+
+        var $status = $("#status");
+        $status.text("Loading..");
+
+        var datafiles = $("#datafiles").val();
+
+        // Create the data table.
+        var chartData = new google.visualization.DataTable();
+
+        var abort = false;
+        var scatterChart = false;
+
+        var chartCols = [];
+
+        for (var i = 0; i < datafiles.length ; i++) {
+          var url  = datafiles[i];
+          var name = url.replace(/\.json$/, '');
+
+          var chart;
+          if (url.indexOf('occured') > 0) {
+            // if we are comparing a data point that doesn't have a value, just an occurance time
+            // then we need to use a Scatter chart because a line chart doesn't move (uses fixed value)
+            scatterChart = true;
+          }
+
+          $.ajax({
+            url: url,
+            dataType:"json",
+            async: false, // sequential access is easier to join
+            success: function(json) {
+
+              for (var j = 0; j < json.length ; j++) {
+                var m = /^Date\((.*),(.*),(.*),(.*),(.*),(.*)\)$/.exec(json[j][0]);
+                json[j][0] = new Date(m[1],m[2],m[3],m[4],m[5],m[6]);
+              }
+              if (i == 0) {
+                chartData.addColumn('datetime', 'Time');
+                chartData.addColumn('number', name);
+                chartData.addRows(json);
+              }
+              else {
+                // Create new data table and join
+                var localData = new google.visualization.DataTable();
+                localData.addColumn('datetime', 'Time');
+                localData.addColumn('number', name);
+                localData.addRows(json);
+                chartCols.push(chartCols.length + 1); // we need to keep all columns already added to chartData
+                chartData = google.visualization.data.join(chartData, localData, 'full', [[0, 0]], chartCols, [1]);
+              }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              $status.text("Error loading JSON files : " + textStatus);
+              console.log(errorThrown);
+              abort = true;
+            }
+          });
+
+          if (abort) {
+            return;
+          }
+
+        }
+        
+        $status.text("Drawing..");
+
+        // Set chart options
+        var options = {
+          'height':800,
+          legend: { position: 'bottom',  textStyle: {fontSize: 10}}
+        };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart;
+        if (scatterChart) {
+          chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+        }
+        else {
+          chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        }
+
+        chart.draw(chartData, options);
+
+        $status.text("Done.");
+
+      }
+    </script>
+  </head>
+
+  <body>
+    <h2 id="title"></h2>
+
+    <div>
+      <select id="datafiles" name="datafiles" multiple="true" size="10">
+      </select>
+      <button type="button" onclick="drawChart()">Update chart</button>
+    </div>
+    <h4 id="status"></h2>
+
+    <!--Div that will hold the chart-->
+    <div id="chart_div"></div>
+  </body>
+</html>

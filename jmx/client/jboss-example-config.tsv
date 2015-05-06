@@ -1,0 +1,6 @@
+jboss.infinispan:type=Cache,name="example-cache(repl_sync)",manager="example-cache-container",component=Statistics	averageReadTime	averageWriteTime	numberOfEntries	hitRatio
+jboss.as:subsystem=datasources,data-source=example-ds,statistics=pool	AverageBlockingTime	InUseCount	MaxCreationTime	MaxWaitCount	AvailableCount	TimedOut
+jboss.as:subsystem=messaging,hornetq-server=default,jms-topic=EXAMPLE_TOPIC	messageCount
+jboss.as:subsystem=messaging,hornetq-server=default,jms-queue=EXAMPLE_QUEUE	messageCount
+jboss.as:subsystem=ejb3,thread-pool=default	queueSize	rejectedCount	completedTaskCount	currentThreadCount	maxThreads
+Q>jboss.as:deployment=*,subsystem=ejb3,stateless-session-bean=*	poolCurrentSize	waitTime	executionTime	peakConcurrentInvocations

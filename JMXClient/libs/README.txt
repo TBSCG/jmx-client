@@ -1,0 +1,1 @@
+jboss-client.jar - taken from JBoss EAP 6.1 installation under bin/client

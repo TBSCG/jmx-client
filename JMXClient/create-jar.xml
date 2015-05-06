@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project JMXClient">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="../jmx/client/jmxclient.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="com.adobe.brobertson.jmx.JMXClient"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="libs/jboss-client.jar"/>
+        </jar>
+        <delete file="../jmx.tgz" />
+        <tar destfile="../jmx.tgz" compression="gzip">
+            <tarfileset dir="../jmx" prefix="jmx/">
+           		<exclude name="logs/"/>
+           		<exclude name="**/*.sh"/>
+           		<exclude name="**/*.pl"/>
+            </tarfileset>
+            <tarfileset dir="../jmx" prefix="jmx/" filemode="755">
+           		<exclude name="logs/"/>
+           		<include name="**/*.sh"/>
+           		<include name="**/*.pl"/>
+        	</tarfileset>
+        </tar>
+    </target>
+</project>

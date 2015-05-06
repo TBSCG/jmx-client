@@ -1,0 +1,21 @@
+]);
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart;
+        if (window.location.pathname.indexOf('occured') > 0) {
+          chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+        }
+        else {
+          chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        }
+
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+
+  <body>
+    <!--Div that will hold the pie chart-->
+    <div id="chart_div"></div>
+  </body>
+</html>
